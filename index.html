@@ -1,1 +1,916 @@
-<h1>Sarrweb fonctionne !</h1>
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sarrweb — Création de Sites Web au Sénégal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Syne+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0A0A0A;
+      --bg2: #111111;
+      --bg3: #181818;
+      --white: #F0EDE8;
+      --gray: #6A6A6A;
+      --gray-light: #2E2E2E;
+      --accent: #00E5A0;
+      --accent-dim: rgba(0,229,160,0.1);
+      --accent2: #FFD700;
+      --red: #FF4444;
+    }
+
+```
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+.cursor-ring {
+  width: 34px; height: 34px;
+  border: 1px solid rgba(0,229,160,0.45);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 26px 60px;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(14px);
+  padding: 16px 60px;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem; font-weight: 800;
+  letter-spacing: 0.18em; color: var(--white);
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 38px; list-style: none; }
+.nav-links a {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--white); text-decoration: none; opacity: 0.4;
+  transition: opacity 0.3s, color 0.3s;
+}
+.nav-links a:hover { opacity: 1; color: var(--accent); }
+
+.nav-cta {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--bg); background: var(--accent);
+  border: none; padding: 12px 28px; cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  transition: background 0.3s, transform 0.2s;
+  text-decoration: none; display: inline-block;
+}
+.nav-cta:hover { background: #00ffb3; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 60px 90px;
+  position: relative; overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  animation: gridScroll 24s linear infinite;
+}
+@keyframes gridScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 72px 72px; }
+}
+
+.hero-glow {
+  position: absolute; top: -150px; right: -150px;
+  width: 650px; height: 650px;
+  background: radial-gradient(circle, rgba(0,229,160,0.07) 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulse 7s ease-in-out infinite alternate;
+}
+@keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
+
+.hero-flag {
+  position: absolute; top: 130px; right: 60px;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+}
+.hero-flag-text {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.22em; color: var(--gray);
+}
+.hero-flag-loc {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.hero-flag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  animation: blink 2s ease-in-out infinite;
+  margin-left: auto;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.28em; color: var(--accent);
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s 0.3s both;
+}
+.hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(3.2rem, 8.5vw, 8.5rem);
+  font-weight: 800; line-height: 0.92;
+  letter-spacing: -0.025em; margin-bottom: 36px;
+  animation: fadeUp 0.8s 0.45s both;
+}
+.hero-title .outline {
+  -webkit-text-stroke: 1px rgba(240,237,232,0.25);
+  color: transparent;
+}
+.hero-title .hi { color: var(--accent); }
+
+.hero-bottom {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 32px;
+  animation: fadeUp 0.8s 0.6s both;
+}
+.hero-desc {
+  font-size: 0.9rem; line-height: 2; opacity: 0.45; max-width: 420px;
+}
+.hero-btns { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+.btn-main {
+  background: var(--accent); color: var(--bg);
+  padding: 15px 40px; border: none; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none; display: inline-block;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-main:hover { background: #00ffb3; transform: translateY(-2px); }
+
+.btn-wa {
+  background: #25D366; color: var(--white);
+  padding: 15px 28px; border: none; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-wa:hover { background: #1ebe5d; transform: translateY(-2px); }
+
+.btn-ghost {
+  background: transparent; color: var(--white);
+  padding: 14px 36px; border: 1px solid var(--gray-light); cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none; display: inline-block;
+  transition: border-color 0.3s, color 0.3s;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(26px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* ── TICKER ── */
+.ticker { background: var(--accent); overflow: hidden; padding: 13px 0; }
+.ticker-track {
+  display: flex; animation: tick 20s linear infinite; white-space: nowrap;
+}
+.ticker-item {
+  font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--bg); padding: 0 36px;
+  display: flex; align-items: center; gap: 36px;
+}
+.ticker-item::after { content: '✦'; font-size: 0.4rem; }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── SECTION ── */
+.sp { padding: 110px 60px; }
+
+.eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+}
+.stitle {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.02em; margin-bottom: 18px;
+}
+.stitle em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--accent); }
+.sdesc { font-size: 0.87rem; line-height: 2; opacity: 0.45; max-width: 500px; }
+
+/* ── ABOUT ── */
+.about { background: var(--bg2); }
+.about-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 90px; align-items: center; max-width: 1150px; margin: 0 auto;
+}
+.about-img { position: relative; }
+.about-img img {
+  width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block;
+  filter: grayscale(20%);
+}
+.about-badge {
+  position: absolute; bottom: -20px; right: -20px;
+  background: var(--accent); color: var(--bg);
+  padding: 22px 28px; text-align: center;
+}
+.about-badge strong {
+  display: block; font-family: 'Syne', sans-serif;
+  font-size: 2.2rem; font-weight: 800; line-height: 1;
+}
+.about-badge span { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; }
+.about-border {
+  position: absolute; top: -16px; left: -16px;
+  width: 55%; height: 55%;
+  border: 1px solid rgba(0,229,160,0.2);
+  z-index: -1;
+}
+
+.about-text .sdesc { margin-bottom: 38px; }
+.about-skills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 38px; }
+.skill-tag {
+  font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid var(--accent-dim);
+  padding: 7px 16px;
+}
+
+.about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.astat { border-left: 2px solid var(--accent-dim); padding-left: 16px; }
+.astat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.astat-label { font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.45; margin-top: 4px; }
+
+/* ── PORTFOLIO ── */
+.portfolio { background: var(--bg); }
+.portfolio-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  max-width: 1200px; margin: 0 auto 64px; flex-wrap: wrap; gap: 24px;
+}
+.projects-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 3px; max-width: 1200px; margin: 0 auto;
+}
+.project-card {
+  position: relative; overflow: hidden; cursor: pointer;
+  min-height: 420px;
+}
+.project-card img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: brightness(0.55) saturate(0.7);
+  transition: filter 0.5s, transform 0.6s;
+  min-height: 420px;
+}
+.project-card:hover img { filter: brightness(0.35) saturate(0.5); transform: scale(1.05); }
+.project-overlay {
+  position: absolute; inset: 0; padding: 40px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.project-num {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.22em; color: var(--accent); margin-bottom: 10px;
+}
+.project-cat {
+  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 8px;
+}
+.project-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem; font-weight: 800; letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.project-desc { font-size: 0.78rem; opacity: 0.55; line-height: 1.7; max-width: 340px; }
+.project-arrow {
+  position: absolute; top: 36px; right: 36px;
+  width: 44px; height: 44px;
+  border: 1px solid rgba(0,229,160,0.35);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-size: 1.1rem;
+  opacity: 0; transform: translateY(-8px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+.project-card:hover .project-arrow { opacity: 1; transform: translateY(0); }
+
+/* ── PRICING ── */
+.pricing { background: var(--bg2); }
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; max-width: 1100px; margin: 64px auto 0;
+}
+.price-card {
+  background: var(--bg3); padding: 52px 40px;
+  border: 1px solid transparent;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s;
+}
+.price-card:hover { border-color: var(--gray-light); }
+.price-card.featured {
+  background: var(--accent); color: var(--bg);
+  border-color: var(--accent);
+}
+.price-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 0; height: 2px; background: var(--accent);
+  transition: width 0.4s;
+}
+.price-card:not(.featured):hover::before { width: 100%; }
+
+.price-badge {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 24px;
+}
+.price-card.featured .price-badge { color: var(--bg); opacity: 0.6; }
+.price-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem; font-weight: 800; margin-bottom: 6px;
+}
+.price-card.featured .price-name { color: var(--bg); }
+.price-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.6rem; font-weight: 800; line-height: 1;
+  color: var(--accent); margin-bottom: 6px;
+}
+.price-card.featured .price-amount { color: var(--bg); }
+.price-currency { font-size: 0.75rem; opacity: 0.55; margin-bottom: 32px; }
+.price-card.featured .price-currency { color: var(--bg); }
+.price-features { list-style: none; margin-bottom: 40px; }
+.price-features li {
+  font-size: 0.82rem; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 12px; opacity: 0.75;
+}
+.price-card.featured .price-features li { border-color: rgba(0,0,0,0.1); color: var(--bg); opacity: 0.8; }
+.price-features li::before { content: '✓'; color: var(--accent); font-weight: 700; font-size: 0.8rem; }
+.price-card.featured .price-features li::before { color: var(--bg); }
+
+.price-btn {
+  width: 100%; padding: 15px;
+  font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  cursor: pointer; border: none;
+  transition: all 0.3s;
+}
+.price-btn-outline {
+  background: transparent; color: var(--accent);
+  border: 1px solid var(--accent-dim);
+}
+.price-btn-outline:hover { background: var(--accent-dim); }
+.price-btn-solid { background: var(--bg); color: var(--accent); }
+.price-btn-solid:hover { background: #0d0d0d; }
+
+/* ── WHY ME ── */
+.whyme { background: var(--bg); }
+.whyme-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2px; max-width: 1200px; margin: 64px auto 0;
+}
+.why-card {
+  background: var(--bg2); padding: 44px 34px;
+  border: 1px solid transparent;
+  transition: background 0.3s, border-color 0.3s;
+}
+.why-card:hover { background: var(--bg3); border-color: var(--gray-light); }
+.why-icon { font-size: 2rem; margin-bottom: 20px; }
+.why-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem; font-weight: 700; margin-bottom: 12px;
+}
+.why-desc { font-size: 0.78rem; line-height: 1.9; opacity: 0.4; }
+
+/* ── PROCESS ── */
+.process { background: var(--bg2); }
+.process-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; max-width: 1200px; margin: 64px auto 0;
+  border: 1px solid var(--gray-light);
+}
+.p-step {
+  padding: 44px 32px;
+  border-right: 1px solid var(--gray-light);
+  position: relative;
+  transition: background 0.3s;
+}
+.p-step:last-child { border-right: none; }
+.p-step:hover { background: var(--bg3); }
+.p-step::after {
+  content: '→'; position: absolute; top: 44px; right: -12px;
+  color: var(--accent); font-size: 0.9rem; z-index: 2;
+}
+.p-step:last-child::after { display: none; }
+.p-num {
+  font-family: 'Syne Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--accent);
+  margin-bottom: 22px;
+}
+.p-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+.p-desc { font-size: 0.76rem; line-height: 1.85; opacity: 0.4; }
+
+/* ── CTA / CONTACT ── */
+.contact-section {
+  background: var(--bg);
+  padding: 130px 60px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.contact-glow {
+  position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 400px;
+  background: radial-gradient(ellipse, rgba(0,229,160,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.contact-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
+.contact-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 7rem);
+  font-weight: 800; line-height: 0.93;
+  letter-spacing: -0.025em; margin-bottom: 36px;
+}
+.contact-title .outline {
+  -webkit-text-stroke: 1px rgba(240,237,232,0.2); color: transparent; display: block;
+}
+.contact-sub { font-size: 0.88rem; opacity: 0.4; line-height: 2; margin-bottom: 52px; }
+
+.contact-options {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+
+.btn-wa-big {
+  background: #25D366; color: var(--white);
+  padding: 18px 46px; border: none; cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 12px;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-wa-big:hover { background: #1ebe5d; transform: translateY(-2px); }
+
+.btn-mail {
+  background: transparent; color: var(--white);
+  padding: 17px 46px; border: 1px solid var(--gray-light); cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 0.78rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none; display: inline-block;
+  transition: border-color 0.3s, color 0.3s, transform 0.2s;
+}
+.btn-mail:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+.contact-info {
+  display: flex; justify-content: center; gap: 50px;
+  margin-top: 50px; flex-wrap: wrap;
+}
+.cinfo-item { text-align: center; }
+.cinfo-label { font-family: 'Syne Mono', monospace; font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); opacity: 0.7; margin-bottom: 6px; }
+.cinfo-val { font-size: 0.9rem; opacity: 0.65; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--gray-light);
+  padding: 60px 60px 32px;
+}
+.footer-top {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 30px; margin-bottom: 48px;
+  padding-bottom: 48px; border-bottom: 1px solid var(--gray-light);
+}
+.footer-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; letter-spacing: 0.18em; }
+.footer-logo span { color: var(--accent); }
+.footer-nav { display: flex; gap: 32px; flex-wrap: wrap; }
+.footer-nav a { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); opacity: 0.35; text-decoration: none; transition: opacity 0.3s; }
+.footer-nav a:hover { opacity: 0.9; }
+.footer-socials { display: flex; gap: 12px; }
+.footer-socials a {
+  width: 38px; height: 38px; border: 1px solid var(--gray-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--white); text-decoration: none;
+  transition: border-color 0.3s, color 0.3s;
+}
+.footer-socials a:hover { border-color: var(--accent); color: var(--accent); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.66rem; opacity: 0.25; flex-wrap: wrap; gap: 12px;
+}
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity:1; transform: translateY(0); }
+.rd1{transition-delay:.12s} .rd2{transition-delay:.24s} .rd3{transition-delay:.36s} .rd4{transition-delay:.48s}
+```
+
+  </style>
+</head>
+<body>
+
+  <div class="cursor-dot" id="dot"></div>
+  <div class="cursor-ring" id="ring"></div>
+
+  <!-- NAV -->
+
+  <nav id="navbar">
+    <div class="nav-logo">SARR<span>WEB</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#portfolio">Réalisations</a></li>
+      <li><a href="#pricing">Tarifs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="https://wa.me/221755589038" target="_blank" class="nav-cta">WhatsApp</a>
+  </nav>
+
+  <!-- HERO -->
+
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-flag">
+      <div class="hero-flag-text">Basé à</div>
+      <div class="hero-flag-loc">📍 Dakar, Sénégal</div>
+      <div class="hero-flag-dot"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-tag">Créateur de sites web · Dakar · Sénégal</p>
+      <h1 class="hero-title">
+        VOTRE<br>
+        <span class="outline">PRÉSENCE</span><br>
+        <span class="hi">EN LIGNE.</span>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">Je crée des sites web professionnels pour les entreprises, hôtels, restaurants et commerces au Sénégal et en Afrique. Des sites qui attirent, convainquent et convertissent.</p>
+        <div class="hero-btns">
+          <a href="#portfolio" class="btn-main">Voir mes réalisations</a>
+          <a href="https://wa.me/221755589038" target="_blank" class="btn-wa">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <a href="#pricing" class="btn-ghost">Voir les tarifs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">Sites vitrines</span>
+      <span class="ticker-item">Hôtels & Restaurants</span>
+      <span class="ticker-item">Boutiques en ligne</span>
+      <span class="ticker-item">Agences & Entreprises</span>
+      <span class="ticker-item">Design moderne</span>
+      <span class="ticker-item">Livraison rapide</span>
+      <span class="ticker-item">Sites vitrines</span>
+      <span class="ticker-item">Hôtels & Restaurants</span>
+      <span class="ticker-item">Boutiques en ligne</span>
+      <span class="ticker-item">Agences & Entreprises</span>
+      <span class="ticker-item">Design moderne</span>
+      <span class="ticker-item">Livraison rapide</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+
+  <section class="about sp" id="about">
+    <div class="about-inner">
+      <div class="about-img reveal">
+        <div class="about-border"></div>
+        <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=700&q=80" alt="Khadim Sarr — Sarrweb"/>
+        <div class="about-badge">
+          <strong>4+</strong>
+          <span>Projets livrés</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <p class="eyebrow reveal">// Qui suis-je</p>
+        <h2 class="stitle reveal rd1">Khadim <em>Sarr</em></h2>
+        <p class="sdesc reveal rd2" style="margin-bottom:22px;">Je suis Khadim Sarr, créateur de sites web basé à Dakar, Sénégal. Je conçois des sites web professionnels et modernes pour les entreprises, hôtels, restaurants et commerces qui veulent se démarquer en ligne.</p>
+        <p class="sdesc reveal rd2" style="margin-bottom:32px;">Mon objectif : vous livrer un site qui reflète la qualité de votre activité, attire de nouveaux clients et vous rend visible 24h/24.</p>
+        <div class="about-skills reveal rd3">
+          <span class="skill-tag">Sites vitrines</span>
+          <span class="skill-tag">E-commerce</span>
+          <span class="skill-tag">Hôtels</span>
+          <span class="skill-tag">Restaurants</span>
+          <span class="skill-tag">Design moderne</span>
+          <span class="skill-tag">Mobile responsive</span>
+        </div>
+        <div class="about-stats reveal rd3">
+          <div class="astat">
+            <div class="astat-num">4</div>
+            <div class="astat-label">Sites réalisés</div>
+          </div>
+          <div class="astat">
+            <div class="astat-num">100%</div>
+            <div class="astat-label">Satisfaction</div>
+          </div>
+          <div class="astat">
+            <div class="astat-num">7j</div>
+            <div class="astat-label">Délai moyen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+
+  <section class="portfolio sp" id="portfolio">
+    <div class="portfolio-header">
+      <div>
+        <p class="eyebrow reveal">// Mes réalisations</p>
+        <h2 class="stitle reveal rd1">Des sites qui <em>impressionnent</em></h2>
+      </div>
+      <p class="sdesc reveal rd2">Voici 4 exemples de sites que je peux créer pour votre activité. Chaque site est unique, personnalisé à votre image.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=80" alt="Hôtel de luxe"/>
+        <div class="project-overlay">
+          <p class="project-num">01 —</p>
+          <p class="project-cat">Hôtel · Luxe · Bord de mer</p>
+          <h3 class="project-name">Le Grand Azur</h3>
+          <p class="project-desc">Site palace 5★ avec réservation en ligne, galerie, suites et services.</p>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-card reveal rd1">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80" alt="Restaurant gastronomique"/>
+        <div class="project-overlay">
+          <p class="project-num">02 —</p>
+          <p class="project-cat">Restaurant · Gastronomique</p>
+          <h3 class="project-name">Racines</h3>
+          <p class="project-desc">Site restaurant étoilé avec carte interactive et formulaire de réservation.</p>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-card reveal rd2">
+        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=900&q=80" alt="Boutique cosmétiques"/>
+        <div class="project-overlay">
+          <p class="project-num">03 —</p>
+          <p class="project-cat">E-commerce · Cosmétiques</p>
+          <h3 class="project-name">NÉOMA</h3>
+          <p class="project-desc">Boutique beauté avec catalogue produits, filtres et newsletter.</p>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-card reveal rd3">
+        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=900&q=80" alt="Agence de communication"/>
+        <div class="project-overlay">
+          <p class="project-num">04 —</p>
+          <p class="project-cat">Agence · Communication</p>
+          <h3 class="project-name">SIGNAL</h3>
+          <p class="project-desc">Site agence premium sombre avec portfolio et section services.</p>
+        </div>
+        <div class="project-arrow">↗</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+
+  <section class="pricing sp" id="pricing">
+    <div style="max-width:1100px; margin:0 auto;">
+      <p class="eyebrow reveal">// Investissement</p>
+      <h2 class="stitle reveal rd1">Des tarifs <em>transparents</em></h2>
+      <p class="sdesc reveal rd2">Des formules claires et adaptées à chaque type d'activité. Paiement possible en plusieurs fois.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <p class="price-badge">01 — Starter</p>
+        <h3 class="price-name">Site Vitrine</h3>
+        <div class="price-amount">100K</div>
+        <p class="price-currency">Franc CFA · Prix de départ</p>
+        <ul class="price-features">
+          <li>Design moderne & personnalisé</li>
+          <li>1 à 5 pages</li>
+          <li>Version mobile incluse</li>
+          <li>Formulaire de contact</li>
+          <li>Livraison en 7 jours</li>
+        </ul>
+        <a href="https://wa.me/221755589038?text=Bonjour%20Khadim,%20je%20suis%20intéressé%20par%20la%20formule%20Site%20Vitrine" target="_blank" class="price-btn price-btn-outline" style="display:block;text-align:center;text-decoration:none;">Démarrer →</a>
+      </div>
+      <div class="price-card featured reveal rd1">
+        <p class="price-badge">02 — Pro ⭐ Populaire</p>
+        <h3 class="price-name">Site Pro</h3>
+        <div class="price-amount">200K</div>
+        <p class="price-currency">Franc CFA · Le plus choisi</p>
+        <ul class="price-features">
+          <li>Tout le pack Starter</li>
+          <li>Animations & effets premium</li>
+          <li>Galerie photos / vidéos</li>
+          <li>Google Maps intégré</li>
+          <li>Réseaux sociaux liés</li>
+          <li>Livraison en 10 jours</li>
+        </ul>
+        <a href="https://wa.me/221755589038?text=Bonjour%20Khadim,%20je%20suis%20intéressé%20par%20la%20formule%20Site%20Pro" target="_blank" class="price-btn price-btn-solid" style="display:block;text-align:center;text-decoration:none;">Démarrer →</a>
+      </div>
+      <div class="price-card reveal rd2">
+        <p class="price-badge">03 — Premium</p>
+        <h3 class="price-name">Sur mesure</h3>
+        <div class="price-amount">Sur devis</div>
+        <p class="price-currency">Adapté à vos besoins</p>
+        <ul class="price-features">
+          <li>Tout le pack Pro</li>
+          <li>E-commerce / boutique</li>
+          <li>Système de réservation</li>
+          <li>Espace client / admin</li>
+          <li>Maintenance incluse</li>
+          <li>Délai selon le projet</li>
+        </ul>
+        <a href="https://wa.me/221755589038?text=Bonjour%20Khadim,%20je%20voudrais%20un%20devis%20pour%20un%20site%20sur%20mesure" target="_blank" class="price-btn price-btn-outline" style="display:block;text-align:center;text-decoration:none;">Demander un devis →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY ME -->
+
+  <section class="whyme sp">
+    <div style="max-width:1200px; margin:0 auto;">
+      <p class="eyebrow reveal">// Pourquoi moi</p>
+      <h2 class="stitle reveal rd1">Ce qui me <em>différencie</em></h2>
+    </div>
+    <div class="whyme-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">🎨</div>
+        <h3 class="why-title">Design premium</h3>
+        <p class="why-desc">Des sites qui ont l'air pro et moderne — pas des templates génériques. Chaque site est unique.</p>
+      </div>
+      <div class="why-card reveal rd1">
+        <div class="why-icon">⚡</div>
+        <h3 class="why-title">Livraison rapide</h3>
+        <p class="why-desc">Votre site est prêt en 7 à 14 jours. Pas de longs délais interminables.</p>
+      </div>
+      <div class="why-card reveal rd2">
+        <div class="why-icon">📱</div>
+        <h3 class="why-title">100% Mobile</h3>
+        <p class="why-desc">Tous mes sites fonctionnent parfaitement sur téléphone, tablette et ordinateur.</p>
+      </div>
+      <div class="why-card reveal rd3">
+        <div class="why-icon">🤝</div>
+        <h3 class="why-title">Suivi personnalisé</h3>
+        <p class="why-desc">Je suis disponible sur WhatsApp pour répondre à vos questions à tout moment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+
+  <section class="process sp">
+    <div style="max-width:1200px; margin:0 auto;">
+      <p class="eyebrow reveal">// Comment ça marche</p>
+      <h2 class="stitle reveal rd1">4 étapes simples <em>vers votre site</em></h2>
+    </div>
+    <div class="process-steps">
+      <div class="p-step reveal">
+        <p class="p-num">01 —</p>
+        <h3 class="p-name">On discute</h3>
+        <p class="p-desc">Vous m'expliquez votre activité, vos besoins et vos préférences de design via WhatsApp.</p>
+      </div>
+      <div class="p-step reveal rd1">
+        <p class="p-num">02 —</p>
+        <h3 class="p-name">Je conçois</h3>
+        <p class="p-desc">Je crée votre site sur mesure avec votre logo, vos couleurs, vos textes et photos.</p>
+      </div>
+      <div class="p-step reveal rd2">
+        <p class="p-num">03 —</p>
+        <h3 class="p-name">Vous validez</h3>
+        <p class="p-desc">Je vous montre le résultat. On ajuste ensemble jusqu'à ce que ce soit parfait.</p>
+      </div>
+      <div class="p-step reveal rd3">
+        <p class="p-num">04 —</p>
+        <h3 class="p-name">On lance !</h3>
+        <p class="p-desc">Votre site est en ligne et visible par tous vos clients potentiels. 🚀</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+
+  <section class="contact-section" id="contact">
+    <div class="contact-glow"></div>
+    <div class="contact-inner reveal">
+      <p class="eyebrow" style="justify-content:center;">// Démarrons ensemble</p>
+      <h2 class="contact-title">
+        VOTRE SITE<br>
+        <span class="outline">WEB VOUS</span><br>
+        ATTEND.
+      </h2>
+      <p class="contact-sub">Envoyez-moi un message sur WhatsApp<br>et recevez un devis gratuit sous 24h.</p>
+      <div class="contact-options">
+        <a href="https://wa.me/221755589038?text=Bonjour%20Khadim,%20je%20voudrais%20créer%20un%20site%20web%20pour%20mon%20activité" target="_blank" class="btn-wa-big">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp — +221 75 558 90 38
+        </a>
+        <a href="/cdn-cgi/l/email-protection#ff8d9e8c8c908a938c9e8d8dc9c9cfbf98929e9693d19c9092" class="btn-mail">
+          ✉ Envoyer un email
+        </a>
+      </div>
+      <div class="contact-info">
+        <div class="cinfo-item">
+          <div class="cinfo-label">Email</div>
+          <div class="cinfo-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15677466667a607966746767232325557278747c793b767a78">[email&#160;protected]</a></div>
+        </div>
+        <div class="cinfo-item">
+          <div class="cinfo-label">WhatsApp</div>
+          <div class="cinfo-val">+221 75 558 90 38</div>
+        </div>
+        <div class="cinfo-item">
+          <div class="cinfo-label">Localisation</div>
+          <div class="cinfo-val">Dakar, Sénégal</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-logo">SARR<span>WEB</span></div>
+      <nav class="footer-nav">
+        <a href="#about">À propos</a>
+        <a href="#portfolio">Réalisations</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.tiktok.com/@ahmadoubamba317" target="_blank" title="TikTok">TK</a>
+        <a href="https://www.instagram.com/monsieur_cordaaa" target="_blank" title="Instagram">IG</a>
+        <a href="https://wa.me/221755589038" target="_blank" title="WhatsApp">WA</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Sarrweb — Khadim Sarr. Tous droits réservés. Dakar, Sénégal.</p>
+      <p>Création de sites web professionnels au Sénégal</p>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+```
+// Custom cursor
+const dot = document.getElementById('dot');
+const ring = document.getElementById('ring');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top  = my + 'px';
+});
+function animRing() {
+  const ox = parseFloat(ring.style.left) || 0;
+  const oy = parseFloat(ring.style.top)  || 0;
+  ring.style.left = (ox + (mx - ox) * 0.13) + 'px';
+  ring.style.top  = (oy + (my - oy) * 0.13) + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// Sticky nav
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = 
+```
